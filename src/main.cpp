@@ -1,16 +1,19 @@
 #include <Arduino.h>
 #include <SelectionDeLaVoie.h>
+#include "IHM.h"
 
-#define BUS_MUX0 2 //Chosi au hasard, à mettre les bonnes pin par rapport au kicad
-#define BUS_MUX1 3
-#define BUS_MUX2 4
 
-#define EN_MUX0 5
-#define EN_MUX1 6
-#define EN_MUX2 7
-#define EN_MUX3 8
-#define EN_MUX4 9
-#define EN_MUX5 10
+#define BUS_MUX0 18 //Choisi au hasard, à mettre les bonnes pin par rapport au kicad
+#define BUS_MUX1 19
+#define BUS_MUX2 33
+
+#define EN_MUX0 16   // EN_MUX0 → GPIO16
+#define EN_MUX1 17   // EN_MUX1 → GPIO17
+#define EN_MUX2 25   // EN_MUX2 → GPIO33
+#define EN_MUX3 26   // EN_MUX3 → GPIO25
+#define EN_MUX4 27   // EN_MUX4 → GPIO26
+#define EN_MUX5 32   // EN_MUX5 → GPIO35
+
 
 unsigned long tempsEchantillonagePrecedent = 0;
 unsigned long tempsEchantillonage = 1000; //En milliseconde
@@ -26,10 +29,18 @@ void setup() {
 
     // Create an instance of SelectionDeLaVoie
     SelectionDeLaVoie selection(bus, enable);
+    initIHM(); // Initialize the IHM
+    // Test printMidOLED
+    printMidOLED("Bonjour\nSalut");
+    delay(2000); // attendre 2 secondes
 
+    
     // Test selectionVoie
     Serial.println("Testing selectionVoie sur voie 10...");
+    
     selection.selectionVoie(10); // Example voie
+
+
 }
 
 void loop() {
@@ -38,6 +49,7 @@ void loop() {
         tempsEchantillonagePrecedent = millis();//En milliseconde
 
         compteurTemps++;
+        Serial.printf("compteurTemps : %d", compteurTemps);
         if(compteurTemps >= 5){
             compteurTemps = 0;
             Serial.println("5 secondes écoulées");
